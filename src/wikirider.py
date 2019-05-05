@@ -24,7 +24,6 @@ class WikiRider(object):
             Quantity of webpages to visit
         """
         self.depth = depth
-        self.depth_counter = 0
         self.next_url = starting_url
         self.base_url = starting_url.split('/wiki/')[0]
         self.visited_urls = []
@@ -39,14 +38,14 @@ class WikiRider(object):
         WikiRider
             Yield this instance for each time it visits a new webpage
         """
-        if self.depth_counter < self.depth:
+        while self.depth > 0:
             self.visited_urls.append(self.next_url)
             self._scrape_html_source()
-            yield self
             self._search_urls()
             self._set_destination()
-            for rider_state in self.run():
-                yield self
+            self.depth -= 1
+
+            yield self
 
     def _scrape_html_source(self):
         """Scrape html soup from next url"""
@@ -69,15 +68,13 @@ class WikiRider(object):
                         break
                 if valid:
                     self.possible_urls.append(a['href'])
+
     def _set_destination(self):
         """Randomly choose next url to travel"""
-        if not self.possible_urls:
-            self.depth_counter = self.depth
-        else:
+        if self.possible_urls:
             next_url_tail = rchoice(self.possible_urls)
             while next_url_tail in self.next_url:
                 next_url_tail = rchoice(self.possible_urls)
-            self.depth_counter += 1
             self.next_url = self.base_url + next_url_tail
 
     @staticmethod

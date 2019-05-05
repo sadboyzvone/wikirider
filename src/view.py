@@ -1,8 +1,8 @@
 import colorama
 from colorama import Fore, Style, Back
 
-class RidePrinter:
 
+class RidePrinter:
     COLOR_MAP = {
         5: Fore.MAGENTA,
         4: Fore.CYAN,
@@ -20,7 +20,7 @@ class RidePrinter:
         """Print the current webpage of some WikiRider instance"""
         page_title = rider.html_source.find('title').text.split(' -')[0]
         next_color = self.COLOR_MAP[self.curr_color_num]
-        dash_counter = min(rider.depth_counter + 1, 25)
+        dash_counter = min(rider.depth + 1, 25)
         self.curr_color_num = (self.curr_color_num + 1) % len(self.COLOR_MAP)
         print(Style.BRIGHT + Fore.WHITE + ("-" * dash_counter)
               + page_title + " - " + next_color + rider.next_url
