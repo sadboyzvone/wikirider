@@ -55,7 +55,7 @@ class WikiRider(object):
         """Scrape html soup from next url"""
         try:
             self.html_source = Bs(req.get(self.next_url).content, 'lxml')
-	    return True
+            return True
         except req.RequestException:
             self.print_connection_error()
             return False
